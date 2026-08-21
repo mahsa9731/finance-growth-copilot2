@@ -9,7 +9,7 @@ interface Props {
 }
 
 export default function KPICards({ metrics }: Props) {
-  // استخراج ایمن مقادیر با مقدار پیش‌فرض صفر جهت جلوگیری از خطای undefined
+ 
   const totalRevenue = metrics?.totalRevenue ?? 0;
   const successfulTransactions = metrics?.successfulTransactions ?? 0;
   const overallSuccessRate = metrics?.overallSuccessRate ?? 0;

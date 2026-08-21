@@ -9,18 +9,17 @@ import CustomerLeaderboard from '@/components/dashboard/CustomerLeaderboard';
 import AnalyticsCharts from '@/components/dashboard/AnalyticsCharts';
 import { ActionableInsight, AggregatedMetrics } from '@/types/transaction';
 import { Sparkles, Zap, X, CheckCircle2 } from 'lucide-react';
+import SalesVelocityChart from '@/components/dashboard/SalesVelocityChart';
 
 export default function GrowthPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // استیت‌های اصلی داشبورد
+  
   const [metrics, setMetrics] = useState<AggregatedMetrics | null>(null);
   const [insights, setInsights] = useState<ActionableInsight[]>([]);
   const [bankData, setBankData] = useState<any[]>([]);
   const [hourlyData, setHourlyData] = useState<any[]>([]);
-
-  // استیت پاپ‌آپ اقدام هوشمند
   const [selectedInsight, setSelectedInsight] = useState<ActionableInsight | null>(null);
   const [appliedSuccess, setAppliedSuccess] = useState(false);
 
@@ -39,7 +38,7 @@ export default function GrowthPage() {
           throw new Error(json.error || 'خطا در دریافت اطلاعات از API');
         }
 
-        // ۱. مقداردهی متریک‌های هدر
+       
         if (json.summary) {
           setMetrics({
             totalRevenue: json.summary.totalSuccessToman,
@@ -54,7 +53,6 @@ export default function GrowthPage() {
           });
         }
 
-        // ۲. تبدیل داده‌های API به توصیه‌های خیلی ساده، دوستانه و تبلیغاتی (بدون فرمول)
         if (Array.isArray(json.actionableInsights)) {
           const mappedInsights: ActionableInsight[] = json.actionableInsights.map((item: any) => {
             let friendlyTitle = item.title;
@@ -88,7 +86,7 @@ export default function GrowthPage() {
               actionText: friendlyAction,
               actionType: item.id === 'INS-01' ? 'SEND_SMS' : item.id === 'INS-02' ? 'CHANGE_GATEWAY' : 'CAMPAIGN',
               explanation: {
-                formula: '', // کلاً فرمول پاک شد
+                formula: '', 
                 sampleSize: 0,
                 sampleSessionKeys: [],
                 affectedVolume: 0,
@@ -98,7 +96,7 @@ export default function GrowthPage() {
           setInsights(mappedInsights);
         }
 
-        // ۳. مقداردهی داده‌های نمودار
+       
         if (json.charts) {
           setBankData(json.charts.bankShare || []);
           setHourlyData(json.charts.hourly || []);
@@ -146,30 +144,28 @@ export default function GrowthPage() {
         </div>
       ) : (
         <div className="flex flex-col gap-6 text-slate-900 font-sans dir-rtl">
-          {/* کارت‌های شاخص عملکرد */}
+         
           {metrics && <KPICards metrics={metrics} />}
 
-          {/* بنر مناسبتی + کارت‌های توصیه‌های صمیمی */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
-            <div className="lg:col-span-2">
+            <div className="lg:col-span-2 flex flex-col gap-6">
               <SeasonalBanner />
+
+              <SalesVelocityChart />
             </div>
 
             <div className="flex flex-col gap-3">
-              <div className="flex items-center justify-between bg-slate-900 px-4 py-3.5 rounded-2xl text-white shadow-lg border border-slate-800">
+              <div className="flex items-center justify-between bg-blue-600 px-4 py-3.5 rounded-2xl text-white shadow-lg border border-blue-500">
                 <div className="flex items-center gap-2.5">
                   <span className="relative flex h-3 w-3">
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                     <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
                   </span>
-                  <h3 className="font-black text-xs sm:text-sm tracking-wide text-amber-300 flex items-center gap-1.5">
-                    <Zap className="w-4 h-4 text-amber-400 fill-amber-400" />
-                    <span>پیشنهادهای دوستانه افزایش فروش</span>
+                  <h3 className="font-black text-xs sm:text-sm tracking-wide text-white flex items-center gap-1.5">
+                    <Zap className="w-4 h-4 text-white fill-white" />
+                    <span>پیشنهادهای تازه برای افزایش فروش</span>
                   </h3>
                 </div>
-                <span className="text-[10px] font-black bg-blue-600 text-white px-2.5 py-1 rounded-xl shadow-xs">
-                  هوشمند
-                </span>
               </div>
 
               {insights && insights.length > 0 ? (
@@ -188,13 +184,10 @@ export default function GrowthPage() {
             </div>
           </div>
 
-          {/* نمودارها */}
+          
           <AnalyticsCharts hourlyData={hourlyData} bankData={bankData} />
-
-          {/* جدول خریداران برتر */}
           <CustomerLeaderboard customers={dummyCustomers} />
 
-          {/* پاپ‌آپ اقدام دوستانه بدون فرمول */}
           {selectedInsight && (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 backdrop-blur-md p-4 dir-rtl animate-fadeIn">
               <div className="relative w-full max-w-md rounded-3xl bg-white border-2 border-slate-200 p-6 shadow-2xl flex flex-col gap-5">
