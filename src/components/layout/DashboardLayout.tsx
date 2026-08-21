@@ -24,7 +24,13 @@ import {
   Sliders,
   Tag,
   Menu,
-  X
+  X,
+  User,
+  Building,
+  Mail,
+  Phone,
+  LogOut,
+  ChevronDown
 } from 'lucide-react';
 
 const sidebarItems = [
@@ -49,6 +55,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const pathname = usePathname();
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
 
   return (
     <div dir="rtl" className="min-h-screen flex flex-col font-sans bg-slate-900/10">
@@ -85,16 +92,97 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <span className="absolute top-1.5 left-1.5 w-2 h-2 rounded-full bg-rose-500 ring-2 ring-slate-900" />
           </button>
 
-          <div className="flex items-center gap-3 pr-3 border-r border-slate-700/40">
-            <img 
-              src="/avatar/upload.png" 
-              alt="پروفایل" 
-              className="w-9 h-9 rounded-xl border border-slate-700/50 object-cover shadow-sm"
-            />
-            <div className="hidden lg:block text-xs">
-              <p className="font-bold text-white">پذیرنده M145</p>
-              <p className="text-slate-400 text-[10px]">صنف دیجیتال</p>
-            </div>
+          {/* Profile Section with Dropdown */}
+          <div className="relative border-r border-slate-700/40 pr-3">
+            <button
+              onClick={() => setIsProfileOpen(!isProfileOpen)}
+              className="flex items-center gap-3 p-1 rounded-xl hover:bg-slate-800/50 transition-all duration-200 outline-none"
+            >
+              <img 
+                src="/avatar/upload.png" 
+                alt="پروفایل" 
+                className="w-9 h-9 rounded-xl border border-slate-700/50 object-cover shadow-sm"
+              />
+              <div className="hidden lg:block text-xs text-right">
+                <p className="font-bold text-white flex items-center gap-1">
+                  پذیرنده
+                  <ChevronDown className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-200 ${isProfileOpen ? 'rotate-180' : ''}`} />
+                </p>
+                <p className="text-slate-400 text-[10px]">صنف دیجیتال</p>
+              </div>
+            </button>
+
+            {/* Backdrop for closing dropdown */}
+            {isProfileOpen && (
+              <div 
+                className="fixed inset-0 z-40" 
+                onClick={() => setIsProfileOpen(false)} 
+              />
+            )}
+
+            {/* Profile Dropdown Menu (Light Mode Style) */}
+            <AnimatePresence>
+              {isProfileOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                  transition={{ duration: 0.15 }}
+                  className="absolute left-0 mt-3 w-80 bg-white border border-blue-100 rounded-3xl shadow-[0_15px_50px_rgba(37,99,235,0.12)] p-4 z-50 text-right overflow-hidden"
+                >
+                  <div className="flex items-center gap-3 pb-3.5 border-b border-blue-50">
+                    <img 
+                      src="/avatar/upload.png" 
+                      alt="پروفایل" 
+                      className="w-12 h-12 rounded-2xl border border-blue-100 object-cover shadow-sm"
+                    />
+                    <div>
+                      <h4 className="font-extrabold text-sm text-blue-950">آرمیتا محمدی</h4>
+                      <p className="text-xs font-bold text-blue-700 mt-0.5">مدیر فروشگاه دیجیتال پلاس</p>
+                      <span className="inline-block mt-1 px-2 py-0.5 bg-blue-50 border border-blue-100 text-blue-800 text-[10px] font-black rounded-lg">
+                        پذیرنده فعال
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="py-3 space-y-2.5 border-b border-blue-50 text-xs text-blue-900">
+                    <div className="flex items-center gap-2.5">
+                      <Building className="w-4 h-4 text-blue-600 shrink-0" />
+                      <span className="font-bold text-blue-700">نام کسب‌وکار:</span>
+                      <span className="font-extrabold text-blue-950 mr-auto">دیجیتال پلاس</span>
+                    </div>
+                    <div className="flex items-center gap-2.5">
+                      <Mail className="w-4 h-4 text-blue-600 shrink-0" />
+                      <span className="font-bold text-blue-700">ایمیل:</span>
+                      <span className="font-extrabold text-blue-950 mr-auto text-[11px]">a.mohammadi@gmail.com</span>
+                    </div>
+                    <div className="flex items-center gap-2.5">
+                      <Phone className="w-4 h-4 text-blue-600 shrink-0" />
+                      <span className="font-bold text-blue-700">شماره تماس:</span>
+                      <span className="font-extrabold text-blue-950 mr-auto dir-ltr">۰۹۱۲ ۳۴۵ ۶۷۸۹</span>
+                    </div>
+                  </div>
+
+                  <div className="pt-2 space-y-1">
+                    <Link
+                      href="/dashboard/settings"
+                      onClick={() => setIsProfileOpen(false)}
+                      className="flex items-center gap-2.5 w-full px-3 py-2 rounded-xl text-xs font-bold text-blue-900 hover:bg-blue-50 transition-all"
+                    >
+                      <User className="w-4 h-4 text-blue-600" />
+                      <span>مشاهده و ویرایش پروفایل</span>
+                    </Link>
+                    <button
+                      onClick={() => setIsProfileOpen(false)}
+                      className="flex items-center gap-2.5 w-full px-3 py-2 rounded-xl text-xs font-bold text-rose-600 hover:bg-rose-50 transition-all"
+                    >
+                      <LogOut className="w-4 h-4 text-rose-600" />
+                      <span>خروج از حساب کاربری</span>
+                    </button>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </div>
       </header>

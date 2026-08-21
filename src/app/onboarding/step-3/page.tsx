@@ -43,7 +43,7 @@ export default function StepThreePage() {
     return (
       <div className="min-h-screen bg-[#f3f4f8] flex flex-col items-center justify-center text-slate-700 font-sans" dir="rtl">
         <Loader2 className="w-8 h-8 animate-spin text-purple-600 mb-3" />
-        <p className="text-sm font-bold text-slate-700">در حال پردازش داده‌های زریـن‌پال...</p>
+        <p className="text-sm font-bold text-slate-700">در حال پردازش اطلاعات...</p>
       </div>
     );
   }
