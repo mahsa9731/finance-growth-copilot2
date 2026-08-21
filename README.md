@@ -8,17 +8,8 @@ A comprehensive, production-grade analytics and management system tailored for m
 
 The project follows the Next.js App Router architecture, ensuring clean separation of concerns between backend analytics computation, routing, and client-side presentation layers.
 
-```text
-src/
-├── app/                  # Next.js App Router pages and API endpoints
-│   ├── api/              # Backend analytics and notification endpoints
-│   └── dashboard/        # Dashboard layout, growth, customers, and traceability views
-├── components/           # Reusable UI components (Layout, Charts, Cards, Modals)
-├── services/             # Core analytics engine and data processing logic
-└── types/                # TypeScript interface definitions (Transactions, Metrics, Insights)
 
-
-##Core Modules
+## Core Modules
 
 Analytics Engine (analyticsEngine.ts): Processes raw transaction datasets to compute key performance indicators, hourly distributions, bank breakdowns, and actionable financial insights.
 
