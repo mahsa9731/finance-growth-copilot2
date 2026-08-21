@@ -36,12 +36,13 @@ export default function SalesVelocityChart() {
   };
 
   return (
-    <div className="w-full rounded-3xl border border-slate-200/90 bg-white p-5 shadow-xl dir-rtl font-sans">
+    
+    <div className="w-full rounded-3xl border border-white/60 bg-white/70 backdrop-blur-xl p-5 shadow-2xl shadow-slate-200/50 dir-rtl font-sans">
       
       {/* Header */}
-      <div className="flex items-center justify-between pb-4 border-b border-slate-100">
+      <div className="flex items-center justify-between pb-4 border-b border-slate-200/60">
         <div className="flex items-center gap-2.5">
-          <div className="p-2 rounded-xl bg-amber-100 text-amber-700">
+          <div className="p-2 rounded-xl bg-amber-500/10 text-amber-700 backdrop-blur-sm">
             <Clock className="w-4 h-4" />
           </div>
           <div>
@@ -54,14 +55,13 @@ export default function SalesVelocityChart() {
           </div>
         </div>
 
-        <span className="flex items-center gap-1 text-[10px] font-black bg-amber-50 text-amber-700 px-2.5 py-1 rounded-xl border border-amber-200">
+        <span className="flex items-center gap-1 text-[10px] font-black bg-amber-500/10 text-amber-800 px-2.5 py-1 rounded-xl border border-amber-300/50 backdrop-blur-sm">
           <Sparkles className="w-3 h-3 text-amber-500" />
           پنجره طلایی: ۱۶ الی ۲۰
         </span>
       </div>
 
-      {/* Mini Action Banner - تغییر به تم آبی و سفید */}
-      <div className="my-3.5 p-3 rounded-2xl bg-blue-600 text-white flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-md border border-blue-500">
+      <div className="my-3.5 p-3 rounded-2xl bg-blue-600/90 backdrop-blur-md text-white flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-lg shadow-blue-500/20 border border-blue-400/30">
         <div className="flex items-center gap-2">
           <TrendingUp className="w-4 h-4 text-amber-300 shrink-0" />
           <p className="text-xs font-bold text-white">
@@ -88,16 +88,23 @@ export default function SalesVelocityChart() {
               tick={{ fill: '#64748B', fontSize: 11, fontWeight: 800 }} 
             />
             <YAxis hide />
+            
             <Tooltip
-              cursor={{ fill: 'rgba(241, 245, 249, 0.5)' }}
+              cursor={{ fill: 'rgba(226, 232, 240, 0.4)' }}
               content={({ active, payload }) => {
                 if (active && payload && payload.length) {
                   const data = payload[0].payload;
                   return (
-                    <div className="rounded-2xl bg-slate-900/95 p-3 text-white text-xs font-bold shadow-xl backdrop-blur-md dir-rtl border border-slate-800">
-                      <p className="text-amber-300 font-black mb-1">ساعت {data.time}</p>
-                      <p className="text-slate-200">تعداد فروش: <span className="text-white font-black">{data.count} سفارش</span></p>
-                      <p className="text-slate-200">حجم مالی: <span className="text-emerald-400 font-black">{(data.volume / 1000000).toFixed(1)} میلیون تومان</span></p>
+                    <div className="rounded-2xl bg-white/95 p-3.5 text-slate-800 text-xs font-bold shadow-xl shadow-slate-300/50 backdrop-blur-md dir-rtl border border-slate-200/80 flex flex-col gap-1">
+                      <p className="text-blue-600 font-black border-b border-slate-100 pb-1 mb-0.5">
+                        ساعت {data.time}
+                      </p>
+                      <p className="text-slate-600 flex items-center justify-between gap-3">
+                        تعداد فروش: <span className="text-slate-900 font-black">{data.count} سفارش</span>
+                      </p>
+                      <p className="text-slate-600 flex items-center justify-between gap-3">
+                        حجم مالی: <span className="text-emerald-600 font-black">{(data.volume / 1000000).toFixed(1)} میلیون تومان</span>
+                      </p>
                     </div>
                   );
                 }
@@ -114,7 +121,6 @@ export default function SalesVelocityChart() {
               strokeWidth={2}
             />
 
-            {/* Bars representing Transaction Count */}
             <Bar dataKey="count" radius={[8, 8, 0, 0]} barSize={20}>
               {mockVelocityData.map((entry, index) => (
                 <Cell 
@@ -128,7 +134,7 @@ export default function SalesVelocityChart() {
       </div>
 
       {/* Chart Legend */}
-      <div className="flex items-center justify-center gap-6 pt-3 border-t border-slate-100 text-[11px] font-black text-slate-600">
+      <div className="flex items-center justify-center gap-6 pt-3 border-t border-slate-200/60 text-[11px] font-black text-slate-600">
         <div className="flex items-center gap-1.5">
           <span className="w-2.5 h-2.5 rounded-sm bg-slate-400" />
           <span>تعداد تراکنش</span>
@@ -144,19 +150,19 @@ export default function SalesVelocityChart() {
       </div>
 
       {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 backdrop-blur-md p-4 dir-rtl animate-fadeIn">
-          <div className="relative w-full max-w-lg rounded-3xl bg-white border border-slate-200 p-6 shadow-2xl flex flex-col gap-5">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/30 backdrop-blur-md p-4 dir-rtl animate-fadeIn">
+          <div className="relative w-full max-w-lg rounded-3xl bg-white/80 backdrop-blur-2xl border border-white/80 p-6 shadow-2xl flex flex-col gap-5">
             
             <button
               onClick={() => setShowModal(false)}
-              className="absolute left-4 top-4 p-1.5 rounded-full text-slate-400 hover:bg-slate-100 hover:text-slate-800 transition-all"
+              className="absolute left-4 top-4 p-1.5 rounded-full text-slate-400 hover:bg-slate-100/80 hover:text-slate-800 transition-all"
             >
               <X className="w-5 h-5" />
             </button>
 
             {/* Modal Header */}
-            <div className="flex items-center gap-3 border-b border-slate-100 pb-4">
-              <div className="p-3 rounded-2xl bg-blue-100 text-blue-600">
+            <div className="flex items-center gap-3 border-b border-slate-200/60 pb-4">
+              <div className="p-3 rounded-2xl bg-blue-500/10 text-blue-600 backdrop-blur-sm">
                 <Calendar className="w-6 h-6" />
               </div>
               <div>
@@ -171,7 +177,7 @@ export default function SalesVelocityChart() {
 
             {isSuccess ? (
               <div className="flex flex-col items-center justify-center py-8 gap-3 text-center">
-                <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center animate-bounce">
+                <div className="w-16 h-16 rounded-full bg-emerald-100/80 text-emerald-600 flex items-center justify-center animate-bounce">
                   <CheckCircle2 className="w-10 h-10" />
                 </div>
                 <h4 className="text-lg font-black text-slate-900">کمپین با موفقیت زمان‌بندی شد!</h4>
@@ -182,21 +188,21 @@ export default function SalesVelocityChart() {
             ) : (
               <>
                 {/* Schedule Table */}
-                <div className="overflow-x-auto rounded-2xl border border-slate-200">
+                <div className="overflow-x-auto rounded-2xl border border-slate-200/80 bg-white/50 backdrop-blur-sm">
                   <table className="w-full text-right text-xs dir-rtl">
-                    <thead className="bg-slate-50 text-slate-700 font-black border-b border-slate-200">
+                    <thead className="bg-slate-100/70 text-slate-700 font-black border-b border-slate-200/80">
                       <tr>
                         <th className="p-3">بازه زمانی</th>
                         <th className="p-3">پیش‌بینی بازدهی</th>
                         <th className="p-3 text-center">انتخاب</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-100 font-bold text-slate-800">
+                    <tbody className="divide-y divide-slate-100/80 font-bold text-slate-800">
                       {mockVelocityData.map((slot) => (
                         <tr 
                           key={slot.time}
                           className={`hover:bg-slate-50/80 transition-all ${
-                            slot.isPeak ? 'bg-amber-50/60' : ''
+                            slot.isPeak ? 'bg-amber-500/10' : ''
                           }`}
                         >
                           <td className="p-3 flex items-center gap-1.5">
@@ -231,14 +237,14 @@ export default function SalesVelocityChart() {
                 <div className="flex items-center gap-3 pt-2">
                   <button
                     onClick={handleSchedule}
-                    className="flex-1 py-3 px-4 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-black shadow-lg shadow-blue-200 transition-all active:scale-95 flex items-center justify-center gap-2"
+                    className="flex-1 py-3 px-4 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-black shadow-lg shadow-blue-500/25 transition-all active:scale-95 flex items-center justify-center gap-2"
                   >
                     <Send className="w-4 h-4" />
                     <span>تایید و فعال‌سازی برای بازه {selectedSlot}</span>
                   </button>
                   <button
                     onClick={() => setShowModal(false)}
-                    className="py-3 px-4 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-black transition-all"
+                    className="py-3 px-4 rounded-2xl bg-slate-100/80 hover:bg-slate-200/80 text-slate-700 text-xs font-black transition-all"
                   >
                     انصراف
                   </button>

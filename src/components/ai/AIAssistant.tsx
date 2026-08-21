@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-
 import {
   Bot,
   Send,
@@ -39,7 +38,6 @@ export default function AIAssistant({
     }
 
     const userQuestion = question.trim();
-
     setQuestion('');
 
     setMessages((prev) => [
@@ -112,28 +110,20 @@ export default function AIAssistant({
       className="
         h-[680px]
         bg-white
-        rounded-[28px]
+        rounded-3xl
         border
         border-blue-100
         shadow-[0_15px_50px_rgba(37,99,235,0.07)]
         overflow-hidden
         flex
         flex-col
+        w-full
       "
     >
-
-      {/* ================= HEADER ================= */}
-
-      <div className="px-6 py-5 border-b border-blue-100 bg-white">
-
+      <div className="px-6 py-5 border-b border-blue-100 bg-white/80 backdrop-blur-md">
         <div className="flex items-center justify-between">
-
           <div className="flex items-center gap-3">
-
-            {/* Bot Avatar */}
-
             <div className="relative">
-
               <div
                 className="
                   w-11
@@ -151,7 +141,6 @@ export default function AIAssistant({
               </div>
 
               {/* Online indicator */}
-
               <span
                 className="
                   absolute
@@ -165,36 +154,28 @@ export default function AIAssistant({
                   rounded-full
                 "
               />
-
             </div>
 
-
             {/* Title */}
-
             <div>
-
-              <h2 className="font-black text-blue-950">
+              <h2 className="font-black text-blue-950 text-base">
                 دستیار هوشمند
               </h2>
 
-              <p className="text-[11px] text-blue-500/60 mt-0.5">
+              <p className="text-xs font-bold text-blue-700 mt-0.5">
                 تحلیل‌گر کسب‌وکار شما
               </p>
-
             </div>
-
           </div>
 
-
           {/* AI Badge */}
-
           <div
             className="
               hidden
               sm:flex
               items-center
               gap-2
-              px-3
+              px-3.5
               py-2
               rounded-xl
               bg-blue-50
@@ -202,19 +183,13 @@ export default function AIAssistant({
               border-blue-100
             "
           >
-            <Sparkles className="w-3.5 h-3.5 text-blue-600" />
-
-            <span className="text-[10px] font-black text-blue-700">
+            <Sparkles className="w-4 h-4 text-blue-600" />
+            <span className="text-xs font-black text-blue-800">
               AI Assistant
             </span>
           </div>
-
         </div>
-
       </div>
-
-
-      {/* ================= MESSAGES ================= */}
 
       <div
         className="
@@ -229,120 +204,104 @@ export default function AIAssistant({
           to-blue-50/20
         "
       >
+        {messages.map((message, index) => (
+          <div
+            key={index}
+            className={`
+              flex
+              gap-3
+              ${
+                message.role === 'user'
+                  ? 'justify-start'
+                  : 'justify-end'
+              }
+            `}
+          >
+            {/* Assistant Avatar */}
+            {message.role === 'assistant' && (
+              <div
+                className="
+                  w-8
+                  h-8
+                  rounded-xl
+                  bg-blue-600
+                  flex
+                  items-center
+                  justify-center
+                  shrink-0
+                  mt-1
+                  shadow-md
+                  shadow-blue-600/15
+                "
+              >
+                <Bot className="w-4 h-4 text-white" />
+              </div>
+            )}
 
-        {messages.map(
-          (message, index) => (
-
+            {/* Message Bubble */}
             <div
-              key={index}
               className={`
-                flex
-                gap-3
+                max-w-[80%]
+                px-4
+                py-3.5
+                rounded-2xl
+                text-sm
+                font-medium
+                leading-7
                 ${
                   message.role === 'user'
-                    ? 'justify-start'
-                    : 'justify-end'
+                    ? `
+                      bg-blue-600
+                      text-white
+                      rounded-tr-md
+                      shadow-md
+                      shadow-blue-600/10
+                    `
+                    : `
+                      bg-blue-50
+                      text-blue-950
+                      border
+                      border-blue-100
+                      rounded-tl-md
+                    `
                 }
               `}
             >
-
-              {/* Assistant Avatar */}
-
-              {message.role === 'assistant' && (
-                <div
-                  className="
-                    w-8
-                    h-8
-                    rounded-xl
-                    bg-blue-600
-                    flex
-                    items-center
-                    justify-center
-                    shrink-0
-                    mt-1
-                    shadow-md
-                    shadow-blue-600/15
-                  "
-                >
-                  <Bot className="w-4 h-4 text-white" />
-                </div>
-              )}
-
-
-              {/* Message Bubble */}
-
-              <div
-                className={`
-                  max-w-[80%]
-                  px-4
-                  py-3.5
-                  rounded-2xl
-                  text-sm
-                  leading-7
-                  ${
-                    message.role === 'user'
-                      ? `
-                        bg-blue-600
-                        text-white
-                        rounded-tr-md
-                        shadow-md
-                        shadow-blue-600/10
-                      `
-                      : `
-                        bg-blue-50
-                        text-blue-950
-                        border
-                        border-blue-100
-                        rounded-tl-md
-                      `
-                  }
-                `}
-              >
-                {message.content}
-              </div>
-
-
-              {/* User Avatar */}
-
-              {message.role === 'user' && (
-                <div
-                  className="
-                    w-8
-                    h-8
-                    rounded-xl
-                    bg-blue-50
-                    border
-                    border-blue-100
-                    text-blue-600
-                    flex
-                    items-center
-                    justify-center
-                    shrink-0
-                    mt-1
-                  "
-                >
-                  <User className="w-4 h-4" />
-                </div>
-              )}
-
+              {message.content}
             </div>
 
-          )
-        )}
-
-
-        {/* ================= LOADING ================= */}
+            {/* User Avatar */}
+            {message.role === 'user' && (
+              <div
+                className="
+                  w-8
+                  h-8
+                  rounded-xl
+                  bg-blue-50
+                  border
+                  border-blue-100
+                  text-blue-600
+                  flex
+                  items-center
+                  justify-center
+                  shrink-0
+                  mt-1
+                "
+              >
+                <User className="w-4 h-4" />
+              </div>
+            )}
+          </div>
+        ))}
 
         {loading && (
-
           <div className="flex items-center gap-3 justify-end">
-
             <div
               className="
                 bg-blue-50
                 border
                 border-blue-100
-                text-blue-800
+                text-blue-900
                 px-4
                 py-3
                 rounded-2xl
@@ -352,13 +311,10 @@ export default function AIAssistant({
                 gap-2
               "
             >
-
               <Loader2 className="w-4 h-4 animate-spin text-blue-600" />
-
               <span className="text-xs font-bold">
                 در حال تحلیل داده‌ها...
               </span>
-
             </div>
 
             <div
@@ -376,15 +332,9 @@ export default function AIAssistant({
             >
               <Bot className="w-4 h-4 text-white" />
             </div>
-
           </div>
-
         )}
-
       </div>
-
-
-      {/* ================= INPUT ================= */}
 
       <div
         className="
@@ -394,7 +344,6 @@ export default function AIAssistant({
           bg-blue-50/40
         "
       >
-
         <div
           className="
             relative
@@ -409,12 +358,9 @@ export default function AIAssistant({
             transition-all
           "
         >
-
           <textarea
             value={question}
-            onChange={(e) =>
-              setQuestion(e.target.value)
-            }
+            onChange={(e) => setQuestion(e.target.value)}
             onKeyDown={handleKeyDown}
             disabled={loading}
             rows={2}
@@ -429,15 +375,14 @@ export default function AIAssistant({
               pt-4
               pb-12
               text-sm
+              font-medium
               text-blue-950
-              placeholder:text-blue-300
+              placeholder:text-blue-400/80
               dir-rtl
             "
           />
 
-
           {/* Input Bottom */}
-
           <div
             className="
               absolute
@@ -449,11 +394,11 @@ export default function AIAssistant({
               justify-between
             "
           >
-
             <span
               className="
-                text-[10px]
-                text-blue-400
+                text-[11px]
+                font-semibold
+                text-blue-600
                 hidden
                 sm:block
               "
@@ -461,15 +406,10 @@ export default function AIAssistant({
               Enter برای ارسال
             </span>
 
-
             {/* Send Button */}
-
             <button
               onClick={sendMessage}
-              disabled={
-                loading ||
-                !question.trim()
-              }
+              disabled={loading || !question.trim()}
               className="
                 w-9
                 h-9
@@ -488,21 +428,15 @@ export default function AIAssistant({
                 shadow-blue-600/20
               "
             >
-
               {loading ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
               ) : (
                 <Send className="w-4 h-4" />
               )}
-
             </button>
-
           </div>
-
         </div>
-
       </div>
-
     </div>
   );
 }
