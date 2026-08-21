@@ -39,7 +39,7 @@ const sidebarItems = [
   { title: 'مشتریان محبوب', href: '/dashboard/customers', icon: Users },
   { title: 'قیف تبدیل و خروج مشتریان', href: '/dashboard/funnel', icon: Filter },
   { title: 'پایداری درگاه', href: '/dashboard/gateways', icon: CreditCard },
-  { title: 'پیش‌بینی هوشمند فروش', href: '/dashboard/forecasting', icon: Sparkles },
+  { title: 'پیش‌بینی فروش', href: '/dashboard/forecasting', icon: Sparkles },
   { title: 'مدیریت وفاداری و پاداش', href: '/dashboard/loyalty', icon: Gift },
   { title: 'مدیریت تخفیف‌ها و کوپن‌ها', href: '/dashboard/coupons', icon: Tag },
   { title: 'تحلیل ریسک و بازگشت وجه', href: '/dashboard/risk-analysis', icon: ShieldAlert },
