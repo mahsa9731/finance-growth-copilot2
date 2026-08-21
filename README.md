@@ -1,4 +1,47 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Smart Merchant Intelligence Platform
+
+A comprehensive, production-grade analytics and management system tailored for modern merchants. This platform processes complex transaction datasets to deliver real-time financial metrics, automated actionable insights, customer loyalty tracking, and gateway stability routing.
+
+---
+
+## Architecture & Project Structure
+
+The project follows the Next.js App Router architecture, ensuring clean separation of concerns between backend analytics computation, routing, and client-side presentation layers.
+
+```text
+src/
+├── app/                  # Next.js App Router pages and API endpoints
+│   ├── api/              # Backend analytics and notification endpoints
+│   └── dashboard/        # Dashboard layout, growth, customers, and traceability views
+├── components/           # Reusable UI components (Layout, Charts, Cards, Modals)
+├── services/             # Core analytics engine and data processing logic
+└── types/                # TypeScript interface definitions (Transactions, Metrics, Insights)
+
+
+##Core Modules
+
+Analytics Engine (analyticsEngine.ts): Processes raw transaction datasets to compute key performance indicators, hourly distributions, bank breakdowns, and actionable financial insights.
+
+Dashboard Layout (DashboardLayout.tsx): Implements a responsive glassmorphic workspace featuring a collapsible sidebar, dynamic header search, user profile integration, and Framer Motion animations.
+
+Growth & Sales Analysis (/dashboard/growth): Visualizes transaction volume trends, conversion rates, and revenue metrics alongside prioritized recommendations.
+
+Customer Management (/dashboard/customers): Automatically extracts and aggregates buyer behavior based on transaction history, providing direct engagement capabilities.
+
+Gateway Stability (/dashboard/gateways): Monitors payment gateway performance, error codes, and failover states to minimize transaction drop-offs.
+
+Traceability & Guide (/dashboard/traceability): Documents computation methodologies, data security practices, and system guidelines.
+
+## Tech Stack
+
+Core: TypeScript, React, Next.js (App Router)(Full-Stack)
+
+Styling: Tailwind CSS, Glassmorphism
+
+Animations: Framer Motion
+
+Icons: Lucide React
+
 
 ## Getting Started
 
