@@ -13,15 +13,14 @@ import { Sparkles, Zap, X, CheckCircle2 } from 'lucide-react';
 export default function GrowthPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  
-  // استیت‌های اختصاصی بر اساس خروجی واقعی API شما
+
+  // استیت‌های اصلی داشبورد
   const [metrics, setMetrics] = useState<AggregatedMetrics | null>(null);
   const [insights, setInsights] = useState<ActionableInsight[]>([]);
   const [bankData, setBankData] = useState<any[]>([]);
   const [hourlyData, setHourlyData] = useState<any[]>([]);
-  const [rfmSegments, setRfmSegments] = useState<any>(null);
 
-  // استیت پاپ‌آپ تعاملی
+  // استیت پاپ‌آپ اقدام هوشمند
   const [selectedInsight, setSelectedInsight] = useState<ActionableInsight | null>(null);
   const [appliedSuccess, setAppliedSuccess] = useState(false);
 
@@ -33,14 +32,14 @@ export default function GrowthPage() {
 
         const res = await fetch('/api/analytics/dashboard');
         if (!res.ok) throw new Error(`خطای دریافت داده از سرور (Status: ${res.status})`);
-        
+
         const json = await res.json();
 
         if (!json.success) {
           throw new Error(json.error || 'خطا در دریافت اطلاعات از API');
         }
 
-        // نگاشت مستقیم داده‌های API به متریک‌های استاندارد داشبورد
+        // ۱. مقداردهی متریک‌های هدر
         if (json.summary) {
           setMetrics({
             totalRevenue: json.summary.totalSuccessToman,
@@ -55,36 +54,55 @@ export default function GrowthPage() {
           });
         }
 
-        // تبدیل و مپ کردن بینش‌های API به تایپ ActionableInsight
+        // ۲. تبدیل داده‌های API به توصیه‌های خیلی ساده، دوستانه و تبلیغاتی (بدون فرمول)
         if (Array.isArray(json.actionableInsights)) {
-          const mappedInsights: ActionableInsight[] = json.actionableInsights.map((item: any) => ({
-            id: item.id,
-            type: item.id === 'INS-01' ? 'CRITICAL' : item.id === 'INS-02' ? 'WARNING' : 'OPPORTUNITY',
-            title: item.title,
-            description: item.description,
-            impactValue: item.impactValue || 0,
-            formattedImpact: item.formattedImpact,
-            actionText: item.actionText,
-            actionType: item.id === 'INS-01' ? 'SEND_SMS' : item.id === 'INS-02' ? 'CHANGE_GATEWAY' : 'CAMPAIGN',
-            explanation: {
-              formula: item.traceability?.formula || '',
-              sampleSize: item.traceability?.sampleSize || 0,
-              sampleSessionKeys: item.traceability?.sampleSessionIds || [],
-              affectedVolume: item.impactValue || 0,
-            },
-          }));
+          const mappedInsights: ActionableInsight[] = json.actionableInsights.map((item: any) => {
+            let friendlyTitle = item.title;
+            let friendlyDescription = item.description;
+            let friendlyAction = item.actionText;
+
+            if (item.id === 'INS-01') {
+              friendlyTitle = 'چندتا از مشتری‌هات موقع پرداخت گیر کردن! 🛒';
+              friendlyDescription =
+                'بعضی خریدارها چند بار تلاش کردن خرید کنن اما نتونستن. همین الان با یه پیامک دوستانه و لینک خرید، بهشون کمک کن خریدشونو راحت تمام کنن!';
+              friendlyAction = 'ارسال پیامک راهنما به مشتریان';
+            } else if (item.id === 'INS-02') {
+              friendlyTitle = 'درگاه پرداختت رو سریع‌تر و راحت‌تر کن ⚡';
+              friendlyDescription =
+                'می‌تونی ترافیک پرداخت رو ببری روی درگاه‌های باکیفیت‌تر تا هیچ مشتری‌ای بخاطر خطای درگاه دست خالی از سایتی نره.';
+              friendlyAction = 'جایگزینی هوشمند درگاه بهتر';
+            } else if (item.id === 'INS-03') {
+              friendlyTitle = 'مشتری‌های وفادارت رو غافلگیر کن! 🎁';
+              friendlyDescription =
+                'مشتری‌هایی داری که چند بار ازت خرید کردن. با فرستادن یک کد تخفیف کوچیک کاری کن که همیشه از خودت خرید کنن!';
+              friendlyAction = 'فرستادن هدیه به مشتریان وفادار';
+            }
+
+            return {
+              id: item.id,
+              type: item.id === 'INS-01' ? 'CRITICAL' : item.id === 'INS-02' ? 'WARNING' : 'OPPORTUNITY',
+              title: friendlyTitle,
+              description: friendlyDescription,
+              impactValue: item.impactValue || 0,
+              formattedImpact: item.formattedImpact,
+              actionText: friendlyAction,
+              actionType: item.id === 'INS-01' ? 'SEND_SMS' : item.id === 'INS-02' ? 'CHANGE_GATEWAY' : 'CAMPAIGN',
+              explanation: {
+                formula: '', // کلاً فرمول پاک شد
+                sampleSize: 0,
+                sampleSessionKeys: [],
+                affectedVolume: 0,
+              },
+            };
+          });
           setInsights(mappedInsights);
         }
 
+        // ۳. مقداردهی داده‌های نمودار
         if (json.charts) {
           setBankData(json.charts.bankShare || []);
           setHourlyData(json.charts.hourly || []);
         }
-
-        if (json.rfmSegments) {
-          setRfmSegments(json.rfmSegments);
-        }
-
       } catch (e: any) {
         console.error('Fetch error:', e);
         setError(e.message || 'خطا در بارگذاری داده‌ها');
@@ -97,9 +115,9 @@ export default function GrowthPage() {
   }, []);
 
   const dummyCustomers = [
-    { cardHash: '62198610****4321', totalSpent: 45000000, purchaseCount: 8, segment: 'VIP' as const },
-    { cardHash: '60379918****9876', totalSpent: 28000000, purchaseCount: 5, segment: 'VIP' as const },
-    { cardHash: '58921012****1122', totalSpent: 12000000, purchaseCount: 3, segment: 'وفادار' as const },
+    { cardHash: '62198610****4321', totalSpent: 45000000, purchaseCount: 8, segment: 'VIP' },
+    { cardHash: '60379918****9876', totalSpent: 28000000, purchaseCount: 5, segment: 'VIP' },
+    { cardHash: '58921012****1122', totalSpent: 12000000, purchaseCount: 3, segment: 'وفادار' },
   ];
 
   const handleApplyFix = () => {
@@ -119,22 +137,24 @@ export default function GrowthPage() {
             <Sparkles className="w-5 h-5 text-blue-600 absolute" />
           </div>
           <p className="text-sm font-black text-slate-800 dir-rtl animate-pulse">
-            در حال آنالیز داده‌های تراکنش از فایل CSV compressed...
+            در حال تحلیل داده‌های فروش شما...
           </p>
         </div>
       ) : error ? (
         <div className="p-5 rounded-2xl bg-rose-100 border-2 border-rose-300 text-rose-950 text-xs font-black dir-rtl shadow-md">
-          خطا در دریافت و پردازش داده‌ها: {error}
+          خطا در دریافت داده‌ها: {error}
         </div>
       ) : (
         <div className="flex flex-col gap-6 text-slate-900 font-sans dir-rtl">
+          {/* کارت‌های شاخص عملکرد */}
           {metrics && <KPICards metrics={metrics} />}
 
+          {/* بنر مناسبتی + کارت‌های توصیه‌های صمیمی */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
             <div className="lg:col-span-2">
               <SeasonalBanner />
             </div>
-            
+
             <div className="flex flex-col gap-3">
               <div className="flex items-center justify-between bg-slate-900 px-4 py-3.5 rounded-2xl text-white shadow-lg border border-slate-800">
                 <div className="flex items-center gap-2.5">
@@ -144,11 +164,11 @@ export default function GrowthPage() {
                   </span>
                   <h3 className="font-black text-xs sm:text-sm tracking-wide text-amber-300 flex items-center gap-1.5">
                     <Zap className="w-4 h-4 text-amber-400 fill-amber-400" />
-                    <span>توصیه‌های مستقیم سودآور</span>
+                    <span>پیشنهادهای دوستانه افزایش فروش</span>
                   </h3>
                 </div>
                 <span className="text-[10px] font-black bg-blue-600 text-white px-2.5 py-1 rounded-xl shadow-xs">
-                  آنلاین
+                  هوشمند
                 </span>
               </div>
 
@@ -162,17 +182,19 @@ export default function GrowthPage() {
                 ))
               ) : (
                 <div className="p-6 rounded-2xl bg-white border border-slate-200 text-slate-500 text-xs text-center font-black shadow-xs">
-                  توصیه‌ای استخراج نشد
+                  در حال حاضر پیشنهادی وجود ندارد
                 </div>
               )}
             </div>
           </div>
 
+          {/* نمودارها */}
           <AnalyticsCharts hourlyData={hourlyData} bankData={bankData} />
-          
+
+          {/* جدول خریداران برتر */}
           <CustomerLeaderboard customers={dummyCustomers} />
 
-          {/* پاپ‌آپ اصلاح هوشمند */}
+          {/* پاپ‌آپ اقدام دوستانه بدون فرمول */}
           {selectedInsight && (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 backdrop-blur-md p-4 dir-rtl animate-fadeIn">
               <div className="relative w-full max-w-md rounded-3xl bg-white border-2 border-slate-200 p-6 shadow-2xl flex flex-col gap-5">
@@ -189,7 +211,7 @@ export default function GrowthPage() {
                   </div>
                   <div>
                     <span className="text-[11px] font-black text-blue-600 bg-blue-50 px-2.5 py-1 rounded-lg border border-blue-100">
-                      اقدام عملی هوشمند
+                      پیشنهاد ساده و پرسود
                     </span>
                     <h3 className="text-base font-black text-slate-900 mt-1">
                       {selectedInsight.title}
@@ -202,31 +224,17 @@ export default function GrowthPage() {
                     <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center animate-bounce">
                       <CheckCircle2 className="w-10 h-10" />
                     </div>
-                    <h4 className="text-lg font-black text-slate-900">عملیات با موفقیت اجرا شد!</h4>
+                    <h4 className="text-lg font-black text-slate-900">با موفقیت انجام شد!</h4>
                     <p className="text-xs font-bold text-slate-600">
-                      دستورالعمل هوشمند به سیستم ارسال شد و تغییرات اعمال گردید.
+                      دستورالعمل اجرا شد و تغییرات برای افزایش فروش اعمال گردید.
                     </p>
                   </div>
                 ) : (
                   <>
-                    <div className="flex flex-col gap-3">
-                      <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80">
-                        <p className="text-xs font-extrabold text-slate-700 leading-relaxed">
-                          {selectedInsight.description}
-                        </p>
-                      </div>
-
-                      {selectedInsight.explanation?.formula && (
-                        <div className="p-4 rounded-2xl bg-amber-50/80 border border-amber-200/80 flex items-start gap-2.5">
-                          <Sparkles className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
-                          <div className="flex flex-col gap-1">
-                            <span className="text-xs font-black text-amber-900">مبنای محاسبه و ردپای داده:</span>
-                            <p className="text-xs font-bold text-amber-800 leading-normal">
-                              {selectedInsight.explanation.formula}
-                            </p>
-                          </div>
-                        </div>
-                      )}
+                    <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80">
+                      <p className="text-xs font-extrabold text-slate-700 leading-relaxed">
+                        {selectedInsight.description}
+                      </p>
                     </div>
 
                     <div className="flex items-center gap-3 pt-2">
@@ -234,13 +242,13 @@ export default function GrowthPage() {
                         onClick={handleApplyFix}
                         className="flex-1 py-3.5 px-4 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-black shadow-xl transition-all active:scale-95"
                       >
-                        {selectedInsight.actionText || 'تایید و اجرا'}
+                        {selectedInsight.actionText || 'انجامش بده!'}
                       </button>
                       <button
                         onClick={() => setSelectedInsight(null)}
                         className="py-3.5 px-4 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-black transition-all"
                       >
-                        انصراف
+                        فعلا نه
                       </button>
                     </div>
                   </>
