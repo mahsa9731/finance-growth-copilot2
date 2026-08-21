@@ -5,36 +5,45 @@ import { AggregatedMetrics } from '@/types/transaction';
 import { DollarSign, ShoppingCart, AlertTriangle, Users } from 'lucide-react';
 
 interface Props {
-  metrics: AggregatedMetrics;
+  metrics?: AggregatedMetrics | null;
 }
 
 export default function KPICards({ metrics }: Props) {
+  // استخراج ایمن مقادیر با مقدار پیش‌فرض صفر جهت جلوگیری از خطای undefined
+  const totalRevenue = metrics?.totalRevenue ?? 0;
+  const successfulTransactions = metrics?.successfulTransactions ?? 0;
+  const overallSuccessRate = metrics?.overallSuccessRate ?? 0;
+  const totalTransactions = metrics?.totalTransactions ?? 0;
+  const attemptedFailedVolume = metrics?.attemptedFailedVolume ?? 0;
+  const topLoyalPayersCount = metrics?.topLoyalPayersCount ?? 0;
+  const uniquePayers = metrics?.uniquePayers ?? 0;
+
   const cards = [
     {
       title: 'فروش کل موفق',
-      value: `${Math.round(metrics.totalRevenue / 10).toLocaleString('fa-IR')} تومان`,
-      subtext: `از ${metrics.successfulTransactions.toLocaleString('fa-IR')} تراکنش موفق`,
+      value: `${Math.round(totalRevenue / 10).toLocaleString('fa-IR')} تومان`,
+      subtext: `از ${successfulTransactions.toLocaleString('fa-IR')} تراکنش موفق`,
       icon: DollarSign,
       color: 'bg-emerald-500/10 text-emerald-600 border-emerald-200',
     },
     {
       title: 'نرخ موفقیت کل (Conversion)',
-      value: `${metrics.overallSuccessRate}٪`,
-      subtext: `از مجموع ${metrics.totalTransactions.toLocaleString('fa-IR')} جلسه پرداخت`,
+      value: `${overallSuccessRate}٪`,
+      subtext: `از مجموع ${totalTransactions.toLocaleString('fa-IR')} جلسه پرداخت`,
       icon: ShoppingCart,
       color: 'bg-blue-500/10 text-blue-600 border-blue-200',
     },
     {
       title: 'فروش از دست‌رفته (خطای درگاه)',
-      value: `${Math.round(metrics.attemptedFailedVolume / 10).toLocaleString('fa-IR')} تومان`,
+      value: `${Math.round(attemptedFailedVolume / 10).toLocaleString('fa-IR')} تومان`,
       subtext: 'قابل احیا با سوئیچینگ هوشمند',
       icon: AlertTriangle,
       color: 'bg-rose-500/10 text-rose-600 border-rose-200',
     },
     {
       title: 'مشتریان وفادار (لیدربورد)',
-      value: `${metrics.topLoyalPayersCount.toLocaleString('fa-IR')} خریدار`,
-      subtext: `از کل ${metrics.uniquePayers.toLocaleString('fa-IR')} کارت منحصربه‌فرد`,
+      value: `${topLoyalPayersCount.toLocaleString('fa-IR')} خریدار`,
+      subtext: `از کل ${uniquePayers.toLocaleString('fa-IR')} کارت منحصربه‌فرد`,
       icon: Users,
       color: 'bg-indigo-500/10 text-indigo-600 border-indigo-200',
     },

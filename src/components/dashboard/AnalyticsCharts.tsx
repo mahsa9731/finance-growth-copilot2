@@ -12,30 +12,46 @@ import {
   Pie,
   Cell,
 } from 'recharts';
-import { BankPerformance } from '@/services/analyticsEngine';
 
 interface Props {
-  hourlyData: Record<number, number>;
-  bankData: BankPerformance[];
+  hourlyData: any;
+  bankData: any;
 }
 
 const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899', '#64748b'];
 
 export default function AnalyticsCharts({ hourlyData, bankData }: Props) {
-  const chartHourly = Object.entries(hourlyData).map(([hour, count]) => ({
-    hour: `${hour}:00`,
-    tps: count,
-  }));
+  // ۱. نرمال‌سازی داده‌های ساعتی (پشتیبانی همزمان از Object و Array)
+  const chartHourly = React.useMemo(() => {
+    if (Array.isArray(hourlyData)) {
+      return hourlyData.map((item) => ({
+        hour: item.hour || '00:00',
+        tps: Number(item.count || item.tps || 0),
+      }));
+    } else if (hourlyData && typeof hourlyData === 'object') {
+      return Object.entries(hourlyData).map(([hour, count]) => ({
+        hour: `${String(hour).padStart(2, '0')}:00`,
+        tps: Number(count || 0),
+      }));
+    }
+    return [];
+  }, [hourlyData]);
 
-  const chartBanks = bankData.map((b) => ({
-    name: b.bankName,
-    value: b.totalSessions,
-  }));
+  // ۲. نرمال‌سازی داده‌های سهم بانک‌ها
+  const chartBanks = React.useMemo(() => {
+    if (Array.isArray(bankData)) {
+      return bankData.map((b) => ({
+        name: b.bankName || b.name || 'نامشخص',
+        value: Number(b.totalSessions || b.amountToman || b.value || 0),
+      }));
+    }
+    return [];
+  }, [bankData]);
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 dir-rtl">
       {/* Hourly Trend Chart */}
-      <div className="lg:col-span-2 p-5 rounded-2xl border border-white/80 bg-white/70 backdrop-blur-xl shadow-sm flex flex-col gap-4">
+      <div className="lg:col-span-2 p-5 rounded-2xl border border-white/80 bg-white/70 backdrop-blur-xl shadow-xs flex flex-col gap-4">
         <div className="flex items-center justify-between">
           <h3 className="font-bold text-slate-900 text-sm">توزیع تراکنش‌ها در ساعات شبانه‌روز</h3>
           <span className="text-xs text-slate-400">تحلیل الگوی زمانی</span>
@@ -52,18 +68,34 @@ export default function AnalyticsCharts({ hourlyData, bankData }: Props) {
               <XAxis dataKey="hour" stroke="#94a3b8" fontSize={11} />
               <YAxis stroke="#94a3b8" fontSize={11} />
               <Tooltip
-                contentStyle={{ backgroundColor: 'rgba(255, 255, 255, 0.9)', borderRadius: '12px', border: 'none' }}
+                contentStyle={{
+                  backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                  borderRadius: '12px',
+                  border: 'none',
+                  boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+                  fontSize: '12px',
+                  direction: 'rtl',
+                }}
+                formatter={(val: any) => [`${Number(val).toLocaleString('fa-IR')} تراکنش`, 'حجم/تعداد']}
+                labelFormatter={(lbl: any) => `ساعت: ${lbl}`}
               />
-              <Area type="monotone" dataKey="tps" stroke="#3b82f6" strokeWidth={2} fillOpacity={1} fill="url(#colorTps)" />
+              <Area
+                type="monotone"
+                dataKey="tps"
+                stroke="#3b82f6"
+                strokeWidth={2}
+                fillOpacity={1}
+                fill="url(#colorTps)"
+              />
             </AreaChart>
           </ResponsiveContainer>
         </div>
       </div>
 
       {/* Bank Share Donut Chart */}
-      <div className="p-5 rounded-2xl border border-white/80 bg-white/70 backdrop-blur-xl shadow-sm flex flex-col gap-4">
+      <div className="p-5 rounded-2xl border border-white/80 bg-white/70 backdrop-blur-xl shadow-xs flex flex-col gap-4">
         <h3 className="font-bold text-slate-900 text-sm">سهم صادرکنندگان کارت (بانک‌ها)</h3>
-        <div className="h-64 w-full flex items-center justify-center">
+        <div className="h-64 w-full flex items-center justify-center dir-ltr">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie
@@ -79,7 +111,17 @@ export default function AnalyticsCharts({ hourlyData, bankData }: Props) {
                   <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                 ))}
               </Pie>
-              <Tooltip />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                  borderRadius: '12px',
+                  border: 'none',
+                  boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+                  fontSize: '12px',
+                  direction: 'rtl',
+                }}
+                formatter={(val: any) => [`${Number(val).toLocaleString('fa-IR')}`, 'سهم/مبلغ']}
+              />
             </PieChart>
           </ResponsiveContainer>
         </div>

@@ -2,58 +2,102 @@
 
 import React from 'react';
 import { ActionableInsight } from '@/types/transaction';
-import { AlertCircle, ArrowUpRight, CheckCircle2, RefreshCw, Zap } from 'lucide-react';
+import { AlertTriangle, ArrowLeft, Flame, Sparkles, Zap } from 'lucide-react';
 
 interface Props {
-  insight: ActionableInsight;
-  onExecuteAction?: (id: string) => void;
+  insight?: ActionableInsight | null;
+  onExecuteAction?: (insight: ActionableInsight) => void;
 }
 
 export default function RecommendationCard({ insight, onExecuteAction }: Props) {
-  const getBadgeStyle = () => {
+  if (!insight) return null;
+
+  const getConfig = () => {
     switch (insight.type) {
       case 'CRITICAL':
-        return { bg: 'bg-rose-50 border-rose-200 text-rose-700', icon: AlertCircle };
+        return {
+          cardBg: 'bg-gradient-to-br from-rose-50 via-white to-rose-100/40 border-rose-300',
+          badgeBg: 'bg-rose-600 text-white shadow-rose-200 shadow-md',
+          accentText: 'text-rose-700',
+          buttonBg: 'bg-rose-600 hover:bg-rose-700 shadow-rose-300',
+          tag: '🚨 فوری / اصطکاک پرداخت',
+          icon: AlertTriangle,
+        };
       case 'WARNING':
-        return { bg: 'bg-amber-50 border-amber-200 text-amber-700', icon: RefreshCw };
+        return {
+          cardBg: 'bg-gradient-to-br from-amber-50 via-white to-amber-100/40 border-amber-300',
+          badgeBg: 'bg-amber-600 text-white shadow-amber-200 shadow-md',
+          accentText: 'text-amber-800',
+          buttonBg: 'bg-amber-600 hover:bg-amber-700 shadow-amber-300',
+          tag: '⚠️ کیفیت فنی درگاه‌ها',
+          icon: Flame,
+        };
       case 'OPPORTUNITY':
-        return { bg: 'bg-emerald-50 border-emerald-200 text-emerald-700', icon: Zap };
       default:
-        return { bg: 'bg-blue-50 border-blue-200 text-blue-700', icon: CheckCircle2 };
+        return {
+          cardBg: 'bg-gradient-to-br from-emerald-50 via-white to-emerald-100/40 border-emerald-300',
+          badgeBg: 'bg-emerald-600 text-white shadow-emerald-200 shadow-md',
+          accentText: 'text-emerald-800',
+          buttonBg: 'bg-emerald-600 hover:bg-emerald-700 shadow-emerald-300',
+          tag: '💡 تحلیل صنف و کارمزد',
+          icon: Zap,
+        };
     }
   };
 
-  const badge = getBadgeStyle();
-  const Icon = badge.icon;
+  const config = getConfig();
+  const Icon = config.icon;
 
   return (
-    <div className="p-5 rounded-2xl border border-white/80 bg-white/70 backdrop-blur-xl shadow-sm hover:shadow-md transition-all flex flex-col justify-between gap-4">
-      <div>
-        <div className="flex items-center justify-between mb-3">
-          <span className={`px-2.5 py-1 rounded-lg text-xs font-semibold border flex items-center gap-1.5 ${badge.bg}`}>
-            <Icon className="w-3.5 h-3.5" />
-            <span>{insight.formattedImpact}</span>
+    <div className={`relative overflow-hidden rounded-3xl border-2 ${config.cardBg} p-5 shadow-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl flex flex-col justify-between gap-5 dir-rtl`}>
+      
+      {/* هدر کارت */}
+      <div className="flex items-center justify-between gap-2 border-b border-slate-200/60 pb-3">
+        <span className={`inline-flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-black ${config.badgeBg}`}>
+          <Icon className="h-4 w-4 animate-bounce" />
+          <span>{config.tag}</span>
+        </span>
+        
+        {insight.formattedImpact && (
+          <span className={`text-xs font-black ${config.accentText} bg-white px-3 py-1.5 rounded-xl border border-slate-200 shadow-xs`}>
+            {insight.formattedImpact}
           </span>
-          <span className="text-[10px] text-slate-400 font-mono">شناسه: {insight.id}</span>
+        )}
+      </div>
+
+      {/* تیتر و توضیحات */}
+      <div className="flex flex-col gap-2.5">
+        <h4 className="text-lg font-black text-slate-950 leading-snug">
+          {insight.title}
+        </h4>
+        <p className="text-sm font-bold text-slate-800 leading-relaxed">
+          {insight.description}
+        </p>
+      </div>
+
+      {/* ردپای داده‌ها */}
+      {insight.explanation?.formula && (
+        <div className="rounded-2xl bg-white/90 backdrop-blur-md p-4 border border-slate-200/80 shadow-xs">
+          <div className="flex items-center gap-1.5 mb-1.5 text-slate-900 text-xs font-black">
+            <Sparkles className="h-4 w-4 text-amber-500 fill-amber-400" />
+            <span>فرمول و مبنای محاسبه:</span>
+          </div>
+          <p className="text-xs font-bold text-slate-700 leading-relaxed">
+            {insight.explanation.formula}
+          </p>
         </div>
+      )}
 
-        <h4 className="font-bold text-slate-900 text-sm mb-1">{insight.title}</h4>
-        <p className="text-xs text-slate-600 leading-relaxed">{insight.description}</p>
-      </div>
-
-      {/* Traceability / Formula Accordion */}
-      <div className="p-3 rounded-xl bg-slate-50/80 border border-slate-100 text-[11px] text-slate-500 font-mono dir-ltr text-right">
-        <span className="text-slate-400 block font-sans mb-0.5 dir-rtl">منبع و نحوه محاسبه:</span>
-        <code>{insight.explanation.formula}</code>
-      </div>
-
-      <button
-        onClick={() => onExecuteAction && onExecuteAction(insight.id)}
-        className="w-full py-2.5 px-4 rounded-xl bg-slate-900 text-white text-xs font-semibold flex items-center justify-center gap-2 hover:bg-blue-600 transition-colors shadow-sm"
-      >
-        <span>{insight.actionText}</span>
-        <ArrowUpRight className="w-4 h-4" />
-      </button>
+      {/* دکمه اقدام */}
+      {insight.actionText && (
+        <button
+          onClick={() => onExecuteAction && onExecuteAction(insight)}
+          className={`flex w-full items-center justify-center gap-2 rounded-2xl px-4 py-3.5 text-sm font-black text-white shadow-lg transition-all active:scale-95 ${config.buttonBg}`}
+        >
+          <span>{insight.actionText}</span>
+          <ArrowLeft className="h-4 w-4" />
+        </button>
+      )}
     </div>
   );
 }
