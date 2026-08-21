@@ -24,7 +24,7 @@ interface TransactionRow {
 
 export async function GET() {
   try {
-    const filePath = path.join(process.cwd(), 'public', 'data', 'challenge_data.csv.gz');
+    const filePath = path.join(process.cwd(), 'public', 'data', 'other_challenge_data.csv.gz');
 
     if (!fs.existsSync(filePath)) {
       return NextResponse.json({ error: 'فایل دیتاست یافت نشد.' }, { status: 404 });
