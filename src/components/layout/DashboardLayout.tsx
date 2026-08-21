@@ -43,10 +43,10 @@ const sidebarItems = [
   { title: 'مدیریت وفاداری و پاداش', href: '/dashboard/loyalty', icon: Gift },
   { title: 'مدیریت تخفیف‌ها و کوپن‌ها', href: '/dashboard/coupons', icon: Tag },
   { title: 'تحلیل ریسک و بازگشت وجه', href: '/dashboard/risk-analysis', icon: ShieldAlert },
-  { title: 'اهداف و تارگت‌های مالی', href: '/dashboard/targets', icon: Target },
+  { title: 'اهداف مالی', href: '/dashboard/targets', icon: Target },
   { title: 'تحلیل محصولات پرفروش', href: '/dashboard/top-products', icon: ShoppingBag },
   { title: 'گزارش‌های سهم بازار', href: '/dashboard/market-share', icon: PieChart },
-  { title: 'تنظیمات پیشرفته', href: '/dashboard/settings', icon: Sliders },
+  { title: 'تنظیمات پیشرفته', href: '/dashboard/settingsA', icon: Sliders },
   { title: 'مقالات کسب و کار', href: '/dashboard/articles', icon: BookOpen },
   { title: 'شفافیت و راهنما', href: '/dashboard/traceability', icon: HelpCircle },
 ];
