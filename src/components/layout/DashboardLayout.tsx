@@ -56,6 +56,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
 
   return (
     <div dir="rtl" className="min-h-screen flex flex-col font-sans bg-slate-900/10">
@@ -87,15 +88,90 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             />
           </div>
 
-          <button className="relative p-2.5 rounded-xl bg-slate-800/40 hover:bg-slate-800/70 border border-slate-700/40 text-slate-300 transition-all">
-            <Bell className="w-4 h-4" />
-            <span className="absolute top-1.5 left-1.5 w-2 h-2 rounded-full bg-rose-500 ring-2 ring-slate-900" />
-          </button>
+          {/* Notifications Dropdown */}
+          <div className="relative">
+            <button 
+              onClick={() => {
+                setIsNotificationsOpen(!isNotificationsOpen);
+                if (isProfileOpen) setIsProfileOpen(false);
+              }}
+              className="relative p-2.5 rounded-xl bg-slate-800/40 hover:bg-slate-800/70 border border-slate-700/40 text-slate-300 transition-all outline-none"
+            >
+              <Bell className="w-4 h-4" />
+              <span className="absolute top-1.5 left-1.5 w-2 h-2 rounded-full bg-rose-500 ring-2 ring-slate-900" />
+            </button>
+
+            {/* Backdrop for closing notifications */}
+            {isNotificationsOpen && (
+              <div 
+                className="fixed inset-0 z-40" 
+                onClick={() => setIsNotificationsOpen(false)} 
+              />
+            )}
+
+            {/* Notifications Pop-up Menu */}
+            <AnimatePresence>
+              {isNotificationsOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                  transition={{ duration: 0.15 }}
+                  className="absolute left-0 mt-3 w-80 bg-white border border-blue-100 rounded-3xl shadow-[0_15px_50px_rgba(37,99,235,0.12)] p-4 z-50 text-right overflow-hidden"
+                >
+                  <div className="flex items-center justify-between pb-3 border-b border-blue-50">
+                    <h4 className="font-extrabold text-sm text-blue-950">اعلان‌ها</h4>
+                    <span className="px-2 py-0.5 bg-blue-50 border border-blue-100 text-blue-800 text-[10px] font-black rounded-lg">
+                      ۳ جدید
+                    </span>
+                  </div>
+
+                  <div className="py-2 space-y-2 max-h-72 overflow-y-auto custom-scrollbar">
+                    <div className="p-2.5 rounded-2xl bg-blue-50/50 hover:bg-blue-50 border border-blue-100/60 transition-all cursor-pointer">
+                      <div className="flex items-center justify-between">
+                        <span className="font-bold text-xs text-blue-950">تسویه حساب موفق</span>
+                        <span className="text-[10px] text-slate-400">۱۰ دقیقه پیش</span>
+                      </div>
+                      <p className="text-[11px] text-slate-600 mt-1">مبلغ ۱۲,۵۰۰,۰۰۰ تومان به حساب شما واریز شد.</p>
+                    </div>
+
+                    <div className="p-2.5 rounded-2xl bg-slate-50 hover:bg-blue-50/50 border border-slate-100 transition-all cursor-pointer">
+                      <div className="flex items-center justify-between">
+                        <span className="font-bold text-xs text-blue-950">افزایش تراکنش‌ها</span>
+                        <span className="text-[10px] text-slate-400">۱ ساعت پیش</span>
+                      </div>
+                      <p className="text-[11px] text-slate-600 mt-1">نرخ تبدیل درگاه پرداخت با رشد ۱۵٪ مواجه شد.</p>
+                    </div>
+
+                    <div className="p-2.5 rounded-2xl bg-slate-50 hover:bg-blue-50/50 border border-slate-100 transition-all cursor-pointer">
+                      <div className="flex items-center justify-between">
+                        <span className="font-bold text-xs text-blue-950">هشدار پایداری</span>
+                        <span className="text-[10px] text-slate-400">۳ ساعت پیش</span>
+                      </div>
+                      <p className="text-[11px] text-slate-600 mt-1">پایداری یکی از درگاه‌های ثانویه کاهش یافته است.</p>
+                    </div>
+                  </div>
+
+                  <div className="pt-2 border-t border-blue-50 text-center">
+                    <button 
+                      onClick={() => setIsNotificationsOpen(false)}
+                      className="text-xs font-bold text-blue-600 hover:text-blue-800 transition-colors"
+                    >
+                      علامت‌گذاری همه به عنوان خوانده شده
+                    </button>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
 
           {/* Profile Section with Dropdown */}
           <div className="relative border-r border-slate-700/40 pr-3">
             <button
-              onClick={() => setIsProfileOpen(!isProfileOpen)}
+              onClick={() => {
+                setIsProfileOpen(!isProfileOpen);
+                if (isNotificationsOpen) setIsNotificationsOpen(false);
+              }}
               className="flex items-center gap-3 p-1 rounded-xl hover:bg-slate-800/50 transition-all duration-200 outline-none"
             >
               <img 
