@@ -12,18 +12,13 @@ import {
   Loader2, 
   Clock, 
   BarChart2, 
-  Bell, 
-  Search, 
-  Settings, 
   Home, 
   TrendingUp,
   FastForward,
-  Calendar,
   Send,
   X,
   ShieldCheck,
-  MessageSquare,
-  Users
+  MessageSquare
 } from 'lucide-react';
 import { processRealDataset } from '@/services/analyticsEngine';
 
@@ -113,7 +108,6 @@ export default function StepTwoPage() {
           });
         }
       } catch (err) {
-        console.error('Failed to fetch onboarding analytics:', err);
         setData({
           peakHourStart: 18,
           peakHourEnd: 21,
@@ -188,9 +182,6 @@ export default function StepTwoPage() {
               <FastForward className="w-3.5 h-3.5" />
               رد کردن
             </button>
-            <button onClick={() => setIsModalOpen(true)} className="p-2 text-slate-500 hover:text-slate-800 rounded-xl hover:bg-white/80 transition-colors"><Search className="w-4 h-4" /></button>
-            <button onClick={() => setIsModalOpen(true)} className="p-2 text-slate-500 hover:text-slate-800 rounded-xl hover:bg-white/80 transition-colors"><Bell className="w-4 h-4" /></button>
-            <button onClick={() => setIsModalOpen(true)} className="p-2 text-slate-500 hover:text-slate-800 rounded-xl hover:bg-white/80 transition-colors"><Settings className="w-4 h-4" /></button>
           </div>
         </div>
 

@@ -12,13 +12,9 @@ import {
   TrendingUp, 
   CreditCard, 
   ShoppingBag,
-  Bell,
-  Search,
-  Settings,
   Home,
   UserCheck,
   X,
-  Send,
   FastForward,
   Percent,
   MessageSquare,
@@ -181,9 +177,6 @@ export default function StepOnePage() {
               <FastForward className="w-3.5 h-3.5" />
               رد کردن
             </button>
-            <button onClick={() => setIsModalOpen(true)} className="p-2 text-slate-500 hover:text-slate-800 rounded-xl hover:bg-white/80 transition-colors"><Search className="w-4 h-4" /></button>
-            <button onClick={() => setIsModalOpen(true)} className="p-2 text-slate-500 hover:text-slate-800 rounded-xl hover:bg-white/80 transition-colors"><Bell className="w-4 h-4" /></button>
-            <button onClick={() => setIsModalOpen(true)} className="p-2 text-slate-500 hover:text-slate-800 rounded-xl hover:bg-white/80 transition-colors"><Settings className="w-4 h-4" /></button>
           </div>
         </div>
 

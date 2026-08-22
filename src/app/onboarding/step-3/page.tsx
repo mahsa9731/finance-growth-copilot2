@@ -12,9 +12,6 @@ import {
   Loader2, 
   AlertTriangle, 
   Users, 
-  Bell, 
-  Search, 
-  Settings, 
   Home, 
   PieChart,
   FastForward,
@@ -61,7 +58,6 @@ export default function StepThreePage() {
         if (txs.length > 0) {
           const analyticsResult = processRealDataset(txs);
           
-          // برررسی و استخراج ایمن داده‌های RFM بدون وابستگی مستقیم به وجود rfmRisk
           let atRiskCount = 0;
           let atRiskRevenueToman = 0;
 
@@ -73,7 +69,6 @@ export default function StepThreePage() {
             atRiskCount = rfm.atRiskUsersCount || rfm.atRiskCount || Math.round(txs.length * 0.18);
             atRiskRevenueToman = Math.round((rfm.atRiskRevenue || 1450000000) / 10);
           } else {
-            // محاسبه دستی مستقیم بر اساس تراکنش‌های تأیید شده
             let totalAmount = 0;
             let verifiedTxs = 0;
             
@@ -140,11 +135,9 @@ export default function StepThreePage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-fuchsia-50 to-pink-50 flex items-center justify-center p-4 relative overflow-hidden font-system" dir="rtl">
-      {/* Background glow effects */}
       <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-purple-300/40 rounded-full blur-[100px] pointer-events-none" />
       <div className="absolute bottom-1/4 left-1/4 w-96 h-96 bg-fuchsia-300/40 rounded-full blur-[100px] pointer-events-none" />
 
-      {/* Success Notification Toast */}
       <AnimatePresence>
         {showSuccessToast && (
           <motion.div 
@@ -165,7 +158,6 @@ export default function StepThreePage() {
         transition={{ duration: 0.35 }}
         className="relative w-full max-w-xl bg-white/70 backdrop-blur-xl rounded-[32px] p-6 md:p-8 text-slate-900 shadow-2xl border border-white/60"
       >
-        {/* Top header navigation */}
         <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-200/80">
           <div className="flex items-center gap-2">
             <span className="inline-flex items-center px-3.5 py-1.5 rounded-full text-xs font-bold bg-purple-100/90 text-purple-800 border border-purple-300/60 shadow-sm">
@@ -182,13 +174,9 @@ export default function StepThreePage() {
               <FastForward className="w-3.5 h-3.5" />
               اتمام آنبوردینگ
             </button>
-            <button onClick={() => setIsModalOpen(true)} className="p-2 text-slate-500 hover:text-slate-800 rounded-xl hover:bg-white/80 transition-colors"><Search className="w-4 h-4" /></button>
-            <button onClick={() => setIsModalOpen(true)} className="p-2 text-slate-500 hover:text-slate-800 rounded-xl hover:bg-white/80 transition-colors"><Bell className="w-4 h-4" /></button>
-            <button onClick={() => setIsModalOpen(true)} className="p-2 text-slate-500 hover:text-slate-800 rounded-xl hover:bg-white/80 transition-colors"><Settings className="w-4 h-4" /></button>
           </div>
         </div>
 
-        {/* Title and subtitle */}
         <div className="mb-6">
           <h1 className="text-2xl md:text-3xl font-extrabold text-slate-900 mb-1.5 tracking-tight">
             پیش‌بینی مشتریان در خطر ریزش
@@ -198,9 +186,7 @@ export default function StepThreePage() {
           </p>
         </div>
 
-        {/* Visual widgets */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-4 mb-6">
-          {/* Gauge card */}
           <div className="md:col-span-7 bg-white/80 border border-purple-100 p-4 rounded-2xl flex flex-col justify-between shadow-sm">
             <div className="flex items-center justify-between mb-2">
               <span className="text-xs font-bold text-slate-800 flex items-center gap-1">
@@ -212,7 +198,6 @@ export default function StepThreePage() {
               </span>
             </div>
 
-            {/* Risk gauge bar */}
             <div className="my-3 space-y-2">
               <div className="flex justify-between items-center text-xs">
                 <span className="text-slate-600 font-bold">سطح ریسک کلی:</span>
@@ -231,7 +216,6 @@ export default function StepThreePage() {
             </p>
           </div>
 
-          {/* Inactive count card */}
           <div className="md:col-span-5 bg-white/80 border border-purple-100 p-4 rounded-2xl flex flex-col justify-between shadow-sm">
             <div className="flex items-center gap-2 mb-3">
               <div className="w-9 h-9 rounded-full bg-purple-600 text-white flex items-center justify-center shadow-md shadow-purple-200">
@@ -254,7 +238,6 @@ export default function StepThreePage() {
           </div>
         </div>
 
-        {/* Action buttons */}
         <div className="space-y-3">
           <button
             onClick={() => setIsModalOpen(true)}
@@ -273,7 +256,7 @@ export default function StepThreePage() {
             ) : (
               <>
                 <Send className="w-4 h-4 ml-2 stroke-[2.5]" />
-                فعال‌سازی یک‌کلیکه کمپین بازگشت
+                فعال‌سازی کمپین بازگشت
               </>
             )}
           </button>
@@ -297,7 +280,6 @@ export default function StepThreePage() {
           </div>
         </div>
 
-        {/* Bottom bar navigation */}
         <div className="mt-6 pt-4 border-t border-slate-200/80 flex items-center justify-around text-slate-500">
           <button onClick={() => router.push('/')} className="p-2 hover:text-slate-800"><Home className="w-5 h-5 stroke-[2.5]" /></button>
           <button onClick={() => router.push('/dashboard/growth')} className="p-2 hover:text-slate-800"><Users className="w-5 h-5 stroke-[2.5]" /></button>
@@ -305,7 +287,6 @@ export default function StepThreePage() {
         </div>
       </motion.div>
 
-      {/* Win-back Campaign Trigger Modal */}
       <AnimatePresence>
         {isModalOpen && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md">
