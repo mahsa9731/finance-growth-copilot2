@@ -1,8 +1,35 @@
-# Smart Merchant Intelligence Platform
+# Smart Merchant Intelligence & Growth Dashboard
 
 A comprehensive, production-grade analytics and management system tailored for modern merchants. This platform processes complex transaction datasets to deliver real-time financial metrics, automated actionable insights, customer loyalty tracking, and gateway stability routing.
 
 ---
+
+## Overview
+
+The Smart Merchant Dashboard is an enterprise-grade SaaS solution designed to bridge the gap between payment gateway analytics and automated customer retention. By processing raw transactional datasets, the platform surfaces real-time revenue KPIs, predicts seasonal buying behaviors, isolates lost revenue opportunities due to gateway failures, and offers one-click automated SMS/messaging triggers to re-engage inactive buyers.
+
+## Key Features & Business Logic
+
+Real-Time Revenue & Conversion Engine
+KPI Telemetry: Real-time tracking of successful revenue, lost revenue (failed gateway transactions), global conversion rate, and total active customer counts.
+
+Smart Gateway Failover Recovery: Identifies checkout drop-offs due to payment provider friction and quantifies recoverable revenue in real time.
+
+Predictive Seasonal & Time-Window Analytics
+Seasonal Sales Decomposition: Dynamic revenue breakdown across quarters/seasons with benchmark comparison against peer industries (e.g., +34% higher than category average).
+
+Golden Hour Conversion Matrix: Heatmap-style window analysis identifying peak purchasing hours to schedule targeted promotional campaigns.
+
+Automated Re-Engagement & Recovery Workflows
+Targeted Recovery Prompts: Smart recommendations triggering direct SMS re-engagement for customers stuck at payment checkout.
+
+RFM Churn Mitigation: Automated segmentation identifying high-value customers at risk of churning, offering dynamic incentive delivery (discount codes, free shipping, or cashback credit).
+
+Modern Glassmorphism UI & Navigation Framework
+Fully responsive sidebar routing supporting analytical modules: RFM Segmentation, Conversion Funnels, Gateway Stability, Risk Analytics, and Merchant Knowledge Base.
+
+Micro-interactions built with Framer Motion for smooth state transitions and accessible data visualizations.
+
 
 ## Architecture & Project Structure
 
@@ -25,14 +52,15 @@ Traceability & Guide (/dashboard/traceability): Documents computation methodolog
 
 ## Tech Stack
 
-Core: TypeScript, React, Next.js (App Router)(Full-Stack)
+Framework: Next.js (App Router, Server Actions)
 
-Styling: Tailwind CSS, Glassmorphism
+Language: TypeScript
 
-Animations: Framer Motion
+Styling: Tailwind CSS with Glassmorphism Overlay Utilities
 
-Icons: Lucide React
+UI Components & Icons: Lucide React, Framer Motion
 
+Analytics Engine: Custom Client-side RFM & Transaction Aggregation Engine
 
 ## Getting Started
 
